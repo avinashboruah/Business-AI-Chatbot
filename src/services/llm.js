@@ -4,11 +4,10 @@ const { extractKnowledge, formatHours, getAnswerFromKnowledge } = require('./kno
 const { isExploitAttempt, sanitizeOutput, SAFE_GUARDRAIL_RESPONSE } = require('./guardrails')
 
 const OPENROUTER_BASE_URL = process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1'
-// Ultra-fast sub-second free models
-const DEFAULT_MODEL = process.env.LLM_MODEL || 'inclusionai/ling-3.0-flash-sante:free'
+const DEFAULT_MODEL = process.env.LLM_MODEL || 'google/gemma-4-26b-a4b-it:free'
 const FALLBACK_MODELS = [
-  'liquid/lfm-2.5-2.6b:free',
-  'google/gemma-4-26b-a4b-it:free'
+  'inclusionai/ling-3.0-flash-sante:free',
+  'liquid/lfm-2.5-2.6b:free'
 ]
 
 // In-memory response cache for repeated questions (e.g. quick question chips)
@@ -131,7 +130,7 @@ async function generateResponse(message, client) {
   }
 
   const systemPrompt = buildSystemPrompt(client)
-  const models = [DEFAULT_MODEL, ...FALLBACK_MODELS]
+  const models = [...new Set([DEFAULT_MODEL, ...FALLBACK_MODELS])]
 
   for (const model of models) {
     try {
