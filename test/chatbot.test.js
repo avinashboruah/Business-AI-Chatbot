@@ -231,3 +231,52 @@ test('Test 8: Security Guardrails against prompt injection and payload abuse', a
   assert.equal(resEmpty.status, 400)
 })
 
+test('Test 9: Direct Lead Submission via /api/leads and retrieval via /api/leads/:clientId', async () => {
+  // 1. Submit lead
+  const submitRes = await fetch(`${baseUrl}/api/leads`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      clientId: 'test-client',
+      name: 'Sarah Connor',
+      phone: '555-987-6543',
+      inquiry: 'Wants to book a private anniversary dinner for 12 guests next Saturday.'
+    })
+  })
+
+  assert.equal(submitRes.status, 201)
+  const submitData = await submitRes.json()
+  assert.equal(submitData.success, true)
+  assert.ok(submitData.lead.id)
+  assert.equal(submitData.lead.contact, '555-987-6543')
+
+  // 2. Fetch leads for client
+  const listRes = await fetch(`${baseUrl}/api/leads/test-client`)
+  assert.equal(listRes.status, 200)
+  const listData = await listRes.json()
+  assert.equal(listData.clientId, 'test-client')
+  assert.ok(listData.total >= 1)
+  const found = listData.leads.find(l => l.contact === '555-987-6543')
+  assert.ok(found, 'Submitted lead should exist in captured list')
+  assert.equal(found.name, 'Sarah Connor')
+})
+
+test('Test 10: Conversational Lead Capture via /api/chat when visitor provides contact info', async () => {
+  const chatRes = await fetch(`${baseUrl}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      clientId: 'test-client',
+      message: 'My name is Alex. Can I book a table for 4 tonight? My number is 555-222-3344.'
+    })
+  })
+
+  assert.equal(chatRes.status, 200)
+  const chatData = await chatRes.json()
+  assert.equal(chatData.lead_captured, true)
+  assert.ok(chatData.lead)
+  assert.equal(chatData.lead.contact, '555-222-3344')
+  assert.equal(chatData.lead.name, 'Alex')
+})
+
+

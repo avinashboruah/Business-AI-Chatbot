@@ -212,6 +212,11 @@
       'box-sizing: border-box !important'
     ].join(';');
 
+    // Prevent any click inside the chat window from closing it
+    chatWindow.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+
     // Header
     var header = document.createElement('div');
     header.style.cssText = [
@@ -288,6 +293,7 @@
     inputField.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         e.preventDefault();
+        e.stopPropagation();
         sendMessage();
       }
     });
@@ -306,7 +312,11 @@
       'font-weight: 500',
       'transition: opacity 0.2s'
     ].join(';');
-    sendBtn.onclick = function() {
+    sendBtn.onclick = function(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       sendMessage();
     };
 
@@ -501,10 +511,143 @@
     return msgDiv;
   }
 
+  function showLeadCaptureBadge() {
+    if (!messageContainer) return;
+    var badge = document.createElement('div');
+    badge.className = 'chatbot-bubble-anim';
+    badge.style.cssText = [
+      'display: flex',
+      'align-items: center',
+      'gap: 6px',
+      'background-color: #ecfdf5',
+      'border: 1px solid #a7f3d0',
+      'color: #065f46',
+      'padding: 6px 12px',
+      'border-radius: 8px',
+      'font-size: 12px',
+      'font-weight: 500',
+      'margin: 4px 0 8px 0',
+      'align-self: flex-start',
+      'box-shadow: 0 1px 2px rgba(0,0,0,0.03)'
+    ].join(';');
+    badge.innerHTML = '<span>✓</span> <span>Details forwarded to our team! We will contact you shortly.</span>';
+    messageContainer.appendChild(badge);
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+
+  function showLeadFormCard(cardData) {
+    if (!messageContainer) return;
+    cardData = cardData || {};
+    var title = cardData.title || 'Request a Quote / Booking';
+    var defaultInquiry = cardData.inquirySuggestion || '';
+
+    var card = document.createElement('div');
+    card.className = 'chatbot-bubble-anim';
+    card.style.cssText = [
+      'background-color: #ffffff',
+      'border: 1.5px solid #bfdbfe',
+      'border-radius: 12px',
+      'padding: 12px 14px',
+      'margin: 6px 0 10px 0',
+      'width: 90%',
+      'align-self: flex-start',
+      'box-shadow: 0 4px 12px rgba(37,99,235,0.08)',
+      'box-sizing: border-box',
+      'font-family: inherit'
+    ].join(';');
+
+    var cardHeader = document.createElement('div');
+    cardHeader.style.cssText = 'font-weight: 600; font-size: 13px; color: #1e40af; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;';
+    cardHeader.innerHTML = '<span>📋</span> <span>' + title + '</span>';
+    card.appendChild(cardHeader);
+
+    var nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'Your Name';
+    nameInput.style.cssText = 'width: 100%; box-sizing: border-box; padding: 7px 10px; margin-bottom: 6px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none;';
+
+    var contactInput = document.createElement('input');
+    contactInput.type = 'text';
+    contactInput.placeholder = 'Phone number or Email *';
+    contactInput.style.cssText = 'width: 100%; box-sizing: border-box; padding: 7px 10px; margin-bottom: 6px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none;';
+
+    var noteInput = document.createElement('input');
+    noteInput.type = 'text';
+    noteInput.placeholder = 'Details / preferred time (optional)';
+    noteInput.value = defaultInquiry;
+    noteInput.style.cssText = 'width: 100%; box-sizing: border-box; padding: 7px 10px; margin-bottom: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none;';
+
+    var submitBtn = document.createElement('button');
+    submitBtn.type = 'button';
+    submitBtn.textContent = 'Submit Request';
+    submitBtn.style.cssText = [
+      'width: 100%',
+      'padding: 8px 12px',
+      'background-color: #2563eb',
+      'color: #ffffff',
+      'border: none',
+      'border-radius: 6px',
+      'font-size: 13px',
+      'font-weight: 600',
+      'cursor: pointer',
+      'transition: opacity 0.2s'
+    ].join(';');
+
+    submitBtn.onclick = function(e) {
+      if (e) e.stopPropagation();
+      var contactVal = contactInput.value.trim();
+      if (!contactVal) {
+        contactInput.style.borderColor = '#ef4444';
+        contactInput.focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      fetch((apiUrl ? apiUrl : '') + '/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientId: clientId,
+          name: nameInput.value.trim(),
+          contact: contactVal,
+          inquiry: noteInput.value.trim() || defaultInquiry || 'Interactive quote request'
+        })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        card.innerHTML = [
+          '<div style="color: #065f46; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; padding: 4px 0;">',
+          '<span>✓</span>',
+          '<span>Request sent! Our team will reach out to you shortly.</span>',
+          '</div>'
+        ].join('');
+      })
+      .catch(function() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Request';
+        alert('Could not submit details. Please try again.');
+      });
+    };
+
+    card.appendChild(nameInput);
+    card.appendChild(contactInput);
+    card.appendChild(noteInput);
+    card.appendChild(submitBtn);
+
+    messageContainer.appendChild(card);
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+
   function sendMessage(textOverride) {
     if (isLoading) return;
     var message = (textOverride || (inputField ? inputField.value : '')).trim();
     if (!message) return;
+
+    if (chatWindow) {
+      chatWindow.style.display = 'flex';
+    }
 
     if (quickQuestionsContainer && quickQuestionsContainer.parentNode) {
       quickQuestionsContainer.style.opacity = '0.5';
@@ -545,6 +688,14 @@
 
       var botResponse = data.answer || data.response || "I'm not sure based on the information I have. You can contact the business directly to confirm.";
       addMessage(botResponse, 'bot');
+
+      if (data.lead_captured) {
+        showLeadCaptureBadge();
+      }
+
+      if (data.show_lead_card && data.lead_card) {
+        showLeadFormCard(data.lead_card);
+      }
 
       if (data.businessName && headerTitle) {
         headerTitle.textContent = data.businessName;

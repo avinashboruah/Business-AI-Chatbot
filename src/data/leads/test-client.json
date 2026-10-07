@@ -1,0 +1,160 @@
+[
+  {
+    "id": "lead_1791391749474_8wieb",
+    "status": "new",
+    "name": "Alex",
+    "contact": "555-222-3344",
+    "phone": "555-222-3344",
+    "email": null,
+    "inquiry": "My name is Alex. Can I book a table for 4 tonight? My number is 555-222-3344.",
+    "createdAt": "2026-10-07T16:49:09.474Z",
+    "conversationId": "default-session"
+  },
+  {
+    "id": "lead_1791391745387_6beir",
+    "status": "new",
+    "name": "Sarah Connor",
+    "contact": "555-987-6543",
+    "phone": "555-987-6543",
+    "email": null,
+    "inquiry": "Wants to book a private anniversary dinner for 12 guests next Saturday.",
+    "createdAt": "2026-10-07T16:49:05.387Z"
+  },
+  {
+    "id": "lead_1791389764376_osww7",
+    "status": "new",
+    "name": "Rahul Sharma",
+    "contact": "rahul@example.com",
+    "phone": null,
+    "email": null,
+    "inquiry": "Catering for 40 guests next Saturday",
+    "createdAt": "2026-10-07T16:16:04.375Z"
+  },
+  {
+    "id": "lead_1791389234614_xlq3b",
+    "status": "new",
+    "name": "Alex",
+    "contact": "555-222-3344",
+    "phone": "555-222-3344",
+    "email": null,
+    "inquiry": "My name is Alex. Can I book a table for 4 tonight? My number is 555-222-3344.",
+    "createdAt": "2026-10-07T16:07:14.613Z",
+    "conversationId": "default-session"
+  },
+  {
+    "id": "lead_1791389232455_f7agc",
+    "status": "new",
+    "name": "Sarah Connor",
+    "contact": "555-987-6543",
+    "phone": "555-987-6543",
+    "email": null,
+    "inquiry": "Wants to book a private anniversary dinner for 12 guests next Saturday.",
+    "createdAt": "2026-10-07T16:07:12.455Z"
+  },
+  {
+    "id": "lead_1791385663029_vkrah",
+    "status": "new",
+    "name": "Alex",
+    "contact": "555-222-3344",
+    "phone": "555-222-3344",
+    "email": null,
+    "inquiry": "My name is Alex. Can I book a table for 4 tonight? My number is 555-222-3344.",
+    "createdAt": "2026-10-07T15:07:43.029Z",
+    "conversationId": "default-session"
+  },
+  {
+    "id": "lead_1791385660726_x9urg",
+    "status": "new",
+    "name": "Sarah Connor",
+    "contact": "555-987-6543",
+    "phone": "555-987-6543",
+    "email": null,
+    "inquiry": "Wants to book a private anniversary dinner for 12 guests next Saturday.",
+    "createdAt": "2026-10-07T15:07:40.725Z"
+  },
+  {
+    "id": "lead_1791385224955_cuhaw",
+    "status": "new",
+    "name": "Alex",
+    "contact": "555-222-3344",
+    "phone": "555-222-3344",
+    "email": null,
+    "inquiry": "My name is Alex. Can I book a table for 4 tonight? My number is 555-222-3344.",
+    "createdAt": "2026-10-07T15:00:24.955Z",
+    "conversationId": "default-session"
+  },
+  {
+    "id": "lead_1791385222658_4mzpf",
+    "status": "new",
+    "name": "Sarah Connor",
+    "contact": "555-987-6543",
+    "phone": "555-987-6543",
+    "email": null,
+    "inquiry": "Wants to book a private anniversary dinner for 12 guests next Saturday.",
+    "createdAt": "2026-10-07T15:00:22.657Z"
+  },
+  {
+    "id": "lead_1791384339087_db76e",
+    "status": "new",
+    "name": "Alex",
+    "contact": "555-   0199",
+    "phone": "555-   0199",
+    "email": null,
+    "inquiry": "Hi, I want to book a table for 4 tonight! My name is Alex, phone is 555-   0199",
+    "createdAt": "2026-10-07T14:45:39.087Z",
+    "conversationId": "anonymous"
+  },
+  {
+    "id": "lead_1791382254869_w988c",
+    "status": "new",
+    "name": "Alex",
+    "contact": "555-222-3344",
+    "phone": "555-222-3344",
+    "email": null,
+    "inquiry": "My name is Alex. Can I book a table for 4 tonight? My number is 555-222-3344.",
+    "createdAt": "2026-10-07T14:10:54.869Z",
+    "conversationId": "anonymous"
+  },
+  {
+    "id": "lead_1791382252396_fipob",
+    "status": "new",
+    "name": "Sarah Connor",
+    "contact": "555-987-6543",
+    "phone": "555-987-6543",
+    "email": null,
+    "inquiry": "Wants to book a private anniversary dinner for 12 guests next Saturday.",
+    "createdAt": "2026-10-07T14:10:52.396Z"
+  },
+  {
+    "id": "lead_1791382172067_xtmm9",
+    "status": "new",
+    "name": "Marco and",
+    "contact": "+1-555-849-2041",
+    "phone": "+1-555-849-2041",
+    "email": null,
+    "inquiry": "Hi, I would love to book a table for 4 tomorrow at 7:30 PM. My name is Marco and my phone is +1-555-849-2041.",
+    "createdAt": "2026-10-07T14:09:32.066Z",
+    "conversationId": "anonymous"
+  },
+  {
+    "id": "lead_1791381975659_qcekn",
+    "status": "new",
+    "name": "Alex",
+    "contact": "555-222-3344",
+    "phone": "555-222-3344",
+    "email": null,
+    "inquiry": "My name is Alex. Can I book a table for 4 tonight? My number is 555-222-3344.",
+    "createdAt": "2026-10-07T14:06:15.658Z",
+    "conversationId": "anonymous"
+  },
+  {
+    "id": "lead_1791381973255_ne4zt",
+    "status": "new",
+    "name": "Sarah Connor",
+    "contact": "555-987-6543",
+    "phone": "555-987-6543",
+    "email": null,
+    "inquiry": "Wants to book a private anniversary dinner for 12 guests next Saturday.",
+    "createdAt": "2026-10-07T14:06:13.255Z"
+  }
+]

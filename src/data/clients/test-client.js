@@ -82,6 +82,10 @@ module.exports = {
     address: '123 Maple Street, Downtown',
     website: 'https://bellaitalia.example.com'
   },
+  notifications: {
+    email: 'reservations@bellaitalia.example.com',
+    telegramChatId: 1470053075 || null
+  },
   quickQuestions: [
     'What are your opening hours?',
     "What's on the menu?",

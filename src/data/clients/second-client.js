@@ -66,6 +66,10 @@ module.exports = {
     address: '742 Industrial Parkway, Westside',
     website: 'https://apexautorepair.example.com'
   },
+  notifications: {
+    email: 'service@apexautorepair.example.com',
+    telegramChatId: process.env.TEST_TELEGRAM_CHAT_ID || null
+  },
   quickQuestions: [
     'What are your opening hours?',
     'How much is an oil change?',

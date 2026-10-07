@@ -78,26 +78,27 @@
 
   <main>
     <div class="client-switcher">
-      <strong>Switch Active Client:</strong><br><br>
-      <a href="?client=test-client">Test Client (Bella Italia Trattoria)</a>
-      <a href="?client=second-client" class="secondary">Second Client (Apex Auto Repair)</a>
+      <strong>Select Demo Client to Preview:</strong><br><br>
+      <a href="?client=dental-clinic" style="background: #0d9488; font-weight: 600;">🦷 Dental Clinic (Niche #1)</a>
+      <a href="?client=catering-events" style="background: #b45309; font-weight: 600;">🍽️ Catering & Events (Niche #2)</a>
+      <a href="?client=test-client">🍕 Italian Restaurant</a>
+      <a href="?client=second-client" class="secondary">🔧 Auto Repair</a>
     </div>
 
     <div class="sample-questions">
       <strong>Try asking these questions in the chat bubble (bottom-right):</strong>
       <ul id="sample-list">
-        <li>"What are your opening hours?" (Tests MVP Success Criteria #3)</li>
-        <li>"Where are you located?"</li>
-        <li>"What's on the menu?"</li>
-        <li>"Do you have vegetarian options?"</li>
-        <li>"Do you offer loaner cars?" (Tests unknown knowledge isolation)</li>
+        <li>"How much does Invisalign cost?" (Answers with real pricing)</li>
+        <li>"Do you accept dental insurance?"</li>
+        <li>"Can I book a consultation?" <em>(Watch the interactive in-chat booking card pop up!)</em></li>
+        <li>"Do you offer emergency appointments?"</li>
       </ul>
     </div>
 
     <section>
-      <h2>About This Website</h2>
-      <p>This is a plain HTML website demonstrating the embeddable chatbot widget from <strong>PRD Section 11 & Section 19 (Test 5)</strong>.</p>
-      <p>Look at the bottom right corner of the page: click the blue chat bubble 💬 to open the chatbot and interact with it.</p>
+      <h2>About This Demo</h2>
+      <p>This is a live preview page showing the 24/7 AI Assistant & Lead Capture System with instant owner alerts.</p>
+      <p>Click the chat bubble in the bottom right corner to interact with the assistant.</p>
     </section>
 
     <div class="note-box">
@@ -108,17 +109,39 @@
   <script>
     // Extract client from query param ?client=...
     var params = new URLSearchParams(window.location.search);
-    var activeClient = params.get('client') || 'test-client';
+    var activeClient = params.get('client') || 'dental-clinic';
 
-    if (activeClient === 'second-client') {
+    if (activeClient === 'dental-clinic') {
+      document.getElementById('business-title').textContent = 'Apex Dental & Smile Studio';
+      document.getElementById('business-desc').textContent = 'Premier family and cosmetic dentistry specializing in Invisalign, dental implants, and emergency care.';
+      document.getElementById('sample-list').innerHTML =
+        '<li>"How much does Invisalign cost?" (Accurate pricing)</li>' +
+        '<li>"Do you accept dental insurance?" (Explains PPO & financing)</li>' +
+        '<li><strong>Interactive Lead Card:</strong> "Can I book a consultation?" <em>(Renders in-chat quote/booking card!)</em></li>' +
+        '<li>"What if I have dental anxiety?" (Painless sedation options)</li>';
+    } else if (activeClient === 'catering-events') {
+      document.getElementById('business-title').textContent = 'Artisan Feast Catering & Events';
+      document.getElementById('business-desc').textContent = 'Full-service boutique catering for luxury weddings, corporate banquets, and private dining.';
+      document.getElementById('sample-list').innerHTML =
+        '<li>"What are your wedding catering packages?" (Starting prices & menus)</li>' +
+        '<li>"What is your minimum guest count?"</li>' +
+        '<li><strong>Interactive Quote Card:</strong> "Can I request a custom catering quote for 50 people?" <em>(Renders in-chat quote card!)</em></li>' +
+        '<li>"Do you accommodate vegan and gluten-free diets?"</li>';
+    } else if (activeClient === 'second-client') {
       document.getElementById('business-title').textContent = 'Apex Auto Repair';
       document.getElementById('business-desc').textContent = 'Full-service auto repair shop with ASE-certified master mechanics.';
       document.getElementById('sample-list').innerHTML =
-        '<li>"What are your opening hours?" (Notice different hours from restaurant)</li>' +
-        '<li>"What services do you offer?"</li>' +
+        '<li>"What are your opening hours?"</li>' +
         '<li>"How much is an oil change?"</li>' +
-        '<li>"Do you provide loaner cars?"</li>' +
-        '<li>"Do you serve pizza?" (Tests unknown knowledge isolation)</li>';
+        '<li>"Do you provide loaner cars?"</li>';
+    } else {
+      document.getElementById('business-title').textContent = 'Bella Italia Trattoria';
+      document.getElementById('business-desc').textContent = 'Authentic Italian dining with wood-fired pizzas, handmade pasta, and fine wine.';
+      document.getElementById('sample-list').innerHTML =
+        '<li>"What are your opening hours?"</li>' +
+        '<li>"What\'s on the menu?"</li>' +
+        '<li>"Do you have vegetarian options?"</li>' +
+        '<li><strong>Lead Capture:</strong> "Can I book a table for 4 tomorrow at 7pm? My name is Alex, phone is 555-0199"</li>';
     }
 
     // Embed widget script:

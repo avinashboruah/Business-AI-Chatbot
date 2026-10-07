@@ -11,6 +11,8 @@ const { clients, registerClient, getClient, listClientIds } = require('./config/
 const { extractKnowledge, getAnswerFromKnowledge } = require('./services/knowledge')
 const { generateResponse } = require('./services/llm')
 const { validateInput } = require('./services/guardrails')
+const { processMessageForLeads, getLeadsForClient, saveLeadRecord, shouldShowLeadCard } = require('./services/leadService')
+const { dispatchLeadNotification } = require('./services/notificationService')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -166,13 +168,28 @@ app.post('/api/chat', chatRateLimiter, async (req, res) => {
     // Generate answer using LLM with pre-LLM & post-LLM guardrails
     const answer = await generateResponse(validation.sanitized, client)
 
+    // Check if the user's message contains contact info or booking inquiry
+    const capturedLead = await processMessageForLeads({
+      client,
+      message: validation.sanitized,
+      conversationId: sessionId
+    })
+
+    const showCard = !capturedLead && shouldShowLeadCard(validation.sanitized, client)
+
     res.json({
       clientId,
       message,
       answer,
       response: answer,
       businessName: client.name,
-      lead_captured: false,
+      lead_captured: !!capturedLead,
+      lead: capturedLead ? { name: capturedLead.name, contact: capturedLead.contact } : null,
+      show_lead_card: showCard,
+      lead_card: showCard ? {
+        title: 'Request a Quote / Booking',
+        inquirySuggestion: validation.sanitized
+      } : null,
       session_id: sessionId || 'default-session'
     })
   } catch (error) {
@@ -182,6 +199,71 @@ app.post('/api/chat', chatRateLimiter, async (req, res) => {
       message: 'Failed to process chat message'
     })
   }
+})
+
+/**
+ * Direct Lead Submission Endpoint (Widget Callback / Mini Form)
+ */
+app.post('/api/leads', chatRateLimiter, async (req, res) => {
+  try {
+    const { clientId, name, contact, phone, email, inquiry, notes } = req.body
+
+    if (!clientId) {
+      return res.status(400).json({ error: 'clientId is required' })
+    }
+
+    const client = getClient(clientId)
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found' })
+    }
+
+    const contactValue = contact || phone || email
+    if (!contactValue) {
+      return res.status(400).json({ error: 'A phone number or email is required' })
+    }
+
+    const leadRecord = saveLeadRecord(clientId, {
+      name: name || null,
+      contact: contactValue,
+      phone: phone || null,
+      email: email || null,
+      inquiry: inquiry || notes || 'Direct contact request via widget',
+      createdAt: new Date().toISOString()
+    })
+
+    // Dispatch background alerts to owner
+    dispatchLeadNotification({ client, lead: leadRecord }).catch(err => {
+      console.error('[LeadsAPI] Error notifying owner:', err)
+    })
+
+    res.status(201).json({
+      success: true,
+      message: 'Thank you! Your information has been received and our team will contact you shortly.',
+      lead: { id: leadRecord.id, contact: contactValue }
+    })
+  } catch (err) {
+    console.error('Lead submission error:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+/**
+ * Get all captured leads for a business owner
+ */
+app.get('/api/leads/:clientId', (req, res) => {
+  const { clientId } = req.params
+  const client = getClient(clientId)
+  if (!client) {
+    return res.status(404).json({ error: 'Client not found' })
+  }
+
+  const leads = getLeadsForClient(clientId)
+  res.json({
+    clientId,
+    businessName: client.name,
+    total: leads.length,
+    leads
+  })
 })
 
 // Serve test/demo widget page
