@@ -1,0 +1,17 @@
+{
+  "name": "business-chatbot",
+  "version": "1.0.0",
+  "description": "Reusable AI chatbot backend for small businesses",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/chatbot.test.js"
+  },
+  "dependencies": {
+    "@hey-amanthakur/chat-bot": "^1.1.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.6",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.7.1"
+  }
+}

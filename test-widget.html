@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot Widget Demo — Bella Italia Trattoria</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .client-switcher {
+      margin: 20px 0;
+      padding: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+    .client-switcher a {
+      display: inline-block;
+      margin-right: 12px;
+      padding: 8px 16px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .client-switcher a.secondary {
+      background: #475569;
+    }
+    .sample-questions {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 16px;
+      margin: 20px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .sample-questions ul {
+      margin: 6px 0 0 0;
+      padding-left: 20px;
+    }
+    .note-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">PRD MVP Demo Page</span>
+    <h1 id="business-title">Bella Italia Trattoria</h1>
+    <p id="business-desc">Authentic Italian dining with wood-fired pizzas, handmade pasta, and fine wine.</p>
+  </header>
+
+  <main>
+    <div class="client-switcher">
+      <strong>Switch Active Client:</strong><br><br>
+      <a href="?client=test-client">Test Client (Bella Italia Trattoria)</a>
+      <a href="?client=second-client" class="secondary">Second Client (Apex Auto Repair)</a>
+    </div>
+
+    <div class="sample-questions">
+      <strong>Try asking these questions in the chat bubble (bottom-right):</strong>
+      <ul id="sample-list">
+        <li>"What are your opening hours?" (Tests MVP Success Criteria #3)</li>
+        <li>"Where are you located?"</li>
+        <li>"What's on the menu?"</li>
+        <li>"Do you have vegetarian options?"</li>
+        <li>"Do you offer loaner cars?" (Tests unknown knowledge isolation)</li>
+      </ul>
+    </div>
+
+    <section>
+      <h2>About This Website</h2>
+      <p>This is a plain HTML website demonstrating the embeddable chatbot widget from <strong>PRD Section 11 & Section 19 (Test 5)</strong>.</p>
+      <p>Look at the bottom right corner of the page: click the blue chat bubble 💬 to open the chatbot and interact with it.</p>
+    </section>
+
+    <div class="note-box">
+      <strong>Backend Status:</strong> Backend runs at <code>http://localhost:3000</code>. Cross-origin embedding is supported!
+    </div>
+  </main>
+
+  <script>
+    // Extract client from query param ?client=...
+    var params = new URLSearchParams(window.location.search);
+    var activeClient = params.get('client') || 'test-client';
+
+    if (activeClient === 'second-client') {
+      document.getElementById('business-title').textContent = 'Apex Auto Repair';
+      document.getElementById('business-desc').textContent = 'Full-service auto repair shop with ASE-certified master mechanics.';
+      document.getElementById('sample-list').innerHTML =
+        '<li>"What are your opening hours?" (Notice different hours from restaurant)</li>' +
+        '<li>"What services do you offer?"</li>' +
+        '<li>"How much is an oil change?"</li>' +
+        '<li>"Do you provide loaner cars?"</li>' +
+        '<li>"Do you serve pizza?" (Tests unknown knowledge isolation)</li>';
+    }
+
+    // Embed widget script:
+    // When viewed on Live Server (e.g. port 5500) or an external site,
+    // load from backend http://localhost:3000/widget.js.
+    // If backend isn't reached, fallback to local ./widget.js or ./public/widget.js
+    var widgetScript = document.createElement('script');
+    widgetScript.setAttribute('data-client-id', activeClient);
+    widgetScript.setAttribute('data-api-url', 'http://localhost:3000');
+
+    widgetScript.onerror = function() {
+      console.warn('Failed loading http://localhost:3000/widget.js, trying local fallback...');
+      var fallback = document.createElement('script');
+      fallback.src = './public/widget.js';
+      fallback.setAttribute('data-client-id', activeClient);
+      fallback.setAttribute('data-api-url', 'http://localhost:3000');
+      document.body.appendChild(fallback);
+    };
+
+    if (window.location.port === '3000') {
+      widgetScript.src = '/widget.js';
+    } else if (window.location.protocol === 'file:') {
+      widgetScript.src = './public/widget.js';
+    } else {
+      widgetScript.src = 'http://localhost:3000/widget.js';
+    }
+
+    document.body.appendChild(widgetScript);
+  </script>
+</body>
+</html>
