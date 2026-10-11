@@ -1,5 +1,6 @@
 # Reusable Business AI Chatbot
 
+
 A multi-business AI chatbot backend and embeddable widget designed for small businesses (restaurants, salons, auto shops, local services, etc.). A single backend serves multiple isolated businesses.
 
 ## Features
